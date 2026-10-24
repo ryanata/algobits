@@ -1,16 +1,17 @@
-# First edition verification
+# Verification
 
-- Production build passes TypeScript and Vite with `/algobits/` as the deployment base.
-- Eight Vitest test groups pass: exhaustive small inputs checked against independent oracles, fixture edge cases, registry discovery, shuffled decks.
-- Dependency audit: zero reported vulnerabilities after updating the test runner.
-- Browser: Two Sum wrong answer, retry, correct answer, and reveal.
-- Browser: 3Sum marker movement, repeated-triplet feedback, correct answer, and reveal.
-- Browser: Find Duplicate full trail, incorrect choice, correct choice, and reveal.
-- Original problem links and pattern tags are absent until the reveal.
-- Search and experience filters select the expected cards.
-- Review covers each bit once per deck and avoids an immediate repeat at a deck boundary.
-- Responsive checks at 390 and 320 pixels: no horizontal page overflow.
-- Offline: stopped the production preview server, reloaded the current challenge, then revealed its explanation successfully from the service worker cache.
-- Fonts and app icons are bundled with the offline shell.
+## Minimal interface and algorithm questions
 
-GitHub Pages publication is verified separately once repository visibility is approved and deployment is complete.
+- The library contains the three problem names and one Review action.
+- Every exercise starts with the actual problem identity, a complete restatement, an example, and its required complexity. Numeric limits are available under Constraints.
+- Two Sum tests lookup/insertion order with one failing input among four valid inputs.
+- 3Sum tests the safe negative-sum branch in a sorted scan.
+- Find Duplicate tests the reset required between the meeting phase and entrance phase.
+- Thirteen tests pass. They include exhaustive small-array oracles, actual displayed-code checks, distractor validation, review shuffling, and initial HTML assertions that the problem precedes its question while the explanation stays hidden.
+- Browser checks: wrong and correct answers, retry, “I don’t know,” next-problem navigation, constraints and reference-solution disclosure, and random review.
+- Phone layouts checked at 390 and 320 pixels; no horizontal page overflow. Question code wraps on small screens.
+- Production service-worker offline reload and GitHub Pages deployment checked separately before handoff.
+
+## Initial edition
+
+The original production shell was verified offline by stopping its preview server and reloading a cached challenge. This revision retains that PWA infrastructure and stable challenge URLs.

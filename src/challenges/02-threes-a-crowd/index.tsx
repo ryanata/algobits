@@ -1,121 +1,71 @@
-import { useState } from "react";
-import type { ChallengeModule, ChallengeProps } from "../types";
-function Challenge({ onComplete }: ChallengeProps) {
-  const [moved, setMoved] = useState(false),
-    [answer, setAnswer] = useState<number | null>(null);
-  return (
-    <div className="exercise">
-      <div className="exercise-top">
-        <span>THE LINEUP</span>
-        <span>
-          TARGET <b>0</b>
-        </span>
-      </div>
-      <div className="number-deck compact">
-        {[-2, 0, 0, 2, 2].map((n, i) => (
-          <div
-            key={i}
-            className={
-              "number-tile " +
-              (i === 0 ? "fixed " : "") +
-              ((!moved && (i === 1 || i === 4)) ||
-              (moved && (i === 2 || i === 3))
-                ? "selected"
-                : "")
-            }
-          >
-            <span>{n}</span>
-            <small>
-              {i === 0
-                ? "fixed"
-                : (!moved && i === 1) || (moved && i === 2)
-                  ? "L"
-                  : (!moved && i === 4) || (moved && i === 3)
-                    ? "R"
-                    : "·"}
-            </small>
-          </div>
-        ))}
-      </div>
-      <div className="recorded">
-        <span>ALREADY RECORDED</span>
-        <code>[-2, 0, 2]</code>
-        <span>✓ sums to 0</span>
-      </div>
-      <h2>New cards. New answer?</h2>
-      <p>
-        The marked cards make zero. You’ve saved their values. Move both markers
-        inward and decide what belongs in the results.
-      </p>
-      {!moved ? (
-        <button className="primary check" onClick={() => setMoved(true)}>
-          Move the markers <span>→ ←</span>
-        </button>
-      ) : (
-        <>
-          <div className="choices stacked">
-            {[
-              "Record [-2, 0, 2] again",
-              "Skip it — the values are the same",
-              "Record [-2, 2, 2]",
-            ].map((text, i) => (
-              <button
-                className={"choice " + (answer === i ? "chosen" : "")}
-                key={text}
-                disabled={answer === 1}
-                onClick={() => {
-                  setAnswer(i);
-                  if (i === 1) onComplete();
-                }}
-              >
-                <strong>{text}</strong>
-                <span>{String.fromCharCode(65 + i)}</span>
-              </button>
-            ))}
-          </div>
-          {answer !== null && (
-            <div
-              className={"feedback " + (answer === 1 ? "correct" : "incorrect")}
-              role="status"
-            >
-              {answer === 1
-                ? "Yes. Different indices can still describe the very same triplet."
-                : answer === 0
-                  ? "Those cards moved, but their values didn’t. Results must be unique by value."
-                  : "That adds up to 2, not 0. Look at the two marked cards."}
-            </div>
-          )}
-        </>
-      )}
-    </div>
-  );
+import Question from "../Question";
+import type { ChallengeModule, ChallengeProps, QuizQuestion } from "../types";
+
+export const question: QuizQuestion = {
+  prompt:
+    "In the O(n²) solution, nums is sorted and i is fixed. Which line completes the negative-sum branch without losing any possible triplet?",
+  code: `while (left < right) {
+  const sum = nums[i] + nums[left] + nums[right];
+  if (sum < 0) {
+    // your answer
+  } else if (sum > 0) {
+    right--;
+  } else {
+    record(nums[i], nums[left], nums[right]);
+    skipEqualValues();
+  }
+}`,
+  options: [
+    { id: "a", label: "right--;" },
+    { id: "b", label: "left++; right--;" },
+    { id: "c", label: "left++;" },
+    { id: "d", label: "return result;" },
+  ],
+  correctId: "c",
+};
+function Challenge(props: ChallengeProps) {
+  return <Question {...question} {...props} />;
 }
 const challenge: ChallengeModule = {
   id: "02-threes-a-crowd",
-  title: "Three’s a crowd",
-  description:
-    "The cards have moved. Decide whether you’ve found something new.",
-  kind: "Next move",
-  minutes: "30–45 sec",
-  date: "2026-10-23",
-  accent: "sage",
   problem: {
     title: "3Sum",
     number: 15,
     url: "https://leetcode.com/problems/3sum/",
+    statement:
+      "Find every distinct triplet of values that totals zero. Each triplet must use three different array positions. Include each value triplet once; its order and the order of the results do not matter.",
+    constraints: ["3 ≤ nums.length ≤ 3000", "−10⁵ ≤ nums[i] ≤ 10⁵"],
+    example: {
+      input: "nums = [-2, 0, 1, 1, 2]",
+      output: "[[-2, 0, 2], [-2, 1, 1]]",
+    },
+    goal: "Use O(n²) time for this exercise.",
   },
-  tags: ["Two pointers", "Sorting", "Deduplication"],
-  insight: "New positions don’t always mean a new triplet.",
+  tags: ["Two pointers", "Sorting"],
   explanation: [
-    "3Sum asks for unique value triplets, not every possible combination of indices. In [-2, 0, 0, 2, 2], the only unique answer is [-2, 0, 2].",
-    "Sort the array, fix one value, then move a left and a right pointer. A sum below zero needs a larger left value; a sum above zero needs a smaller right value.",
-    "After a match, move past all repeats of both endpoint values. Skip repeated fixed values too. That prevents duplicate triplets without a separate results set. The scan takes O(n²) time; sorting costs depend on the implementation.",
+    "Move left forward. With i and left fixed, the current right is already the largest remaining endpoint. If their sum is negative, every smaller right also gives a negative sum. None of those pairs can work.",
+    "Discarding that left value is safe. Decreasing right could discard a valid triplet: in [-4, -2, -1, 0, 1, 2, 3], the first sum is −3, but keeping right at 3 eventually finds [-4, 1, 3]. A linear scan per fixed value gives O(n²) time.",
   ],
-  code: `// After recording [nums[i], nums[left], nums[right]]:
-const a = nums[left], b = nums[right];
-while (left < right && nums[left] === a) left++;
-while (left < right && nums[right] === b) right--;
-// Also skip repeated fixed values in the outer loop.`,
+  code: `function threeSum(nums) {
+  const a = [...nums].sort((x, y) => x - y);
+  const result = [];
+  for (let i = 0; i < a.length - 2; i++) {
+    if (i > 0 && a[i] === a[i - 1]) continue;
+    let left = i + 1, right = a.length - 1;
+    while (left < right) {
+      const sum = a[i] + a[left] + a[right];
+      if (sum < 0) left++;
+      else if (sum > 0) right--;
+      else {
+        result.push([a[i], a[left], a[right]]);
+        const l = a[left], r = a[right];
+        while (left < right && a[left] === l) left++;
+        while (left < right && a[right] === r) right--;
+      }
+    }
+  }
+  return result;
+}`,
   Component: Challenge,
 };
 export default challenge;

@@ -5,11 +5,8 @@ import App from "./App";
 import "@fontsource/dm-sans/latin-400.css";
 import "@fontsource/dm-sans/latin-500.css";
 import "@fontsource/dm-sans/latin-600.css";
-import "@fontsource/dm-sans/latin-700.css";
-import "@fontsource/dm-serif-display/latin-400.css";
-import "@fontsource/dm-serif-display/latin-400-italic.css";
 import "./style.css";
-registerSW({
+const updateApp = registerSW({
   onOfflineReady() {
     window.dispatchEvent(new Event("algobits-offline-ready"));
   },
@@ -22,3 +19,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <App />
   </React.StrictMode>,
 );
+
+window.addEventListener("algobits-apply-update", () => {
+  void updateApp(true);
+});

@@ -1,18 +1,27 @@
 import type { ComponentType } from "react";
+
+export type AnswerResult = "correct" | "incorrect" | "revealed";
 export interface ChallengeProps {
-  onComplete: () => void;
+  onAnswer: (result: AnswerResult) => void;
+}
+export interface QuizQuestion {
+  prompt: string;
+  code: string;
+  options: { id: string; label: string }[];
+  correctId: string;
 }
 export interface ChallengeModule {
   id: string;
-  title: string;
-  description: string;
-  kind: "Counterexample" | "Next move" | "Follow the trail";
-  minutes: string;
-  date: string;
-  accent: "peach" | "sage" | "lavender";
-  problem: { title: string; number: number; url: string };
+  problem: {
+    title: string;
+    number: number;
+    url: string;
+    statement: string;
+    constraints: string[];
+    example: { input: string; output: string };
+    goal: string;
+  };
   tags: string[];
-  insight: string;
   explanation: string[];
   code: string;
   Component: ComponentType<ChallengeProps>;

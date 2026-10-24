@@ -1,8 +1,10 @@
 # AlgoBits
 
-Small algorithm challenges. Lasting little insights.
+A minimal React + TypeScript PWA for reviewing algorithm solutions.
 
-A mobile-first React + TypeScript PWA: three short, independent interactions inspired by **Two Sum**, **3Sum**, and **Find the Duplicate Number**. Play first; reveal the original problem, pattern, reasoning, and code afterward.
+Read the problem, answer one question about its algorithm, then check the reasoning. The first edition covers **Two Sum**, **3Sum**, and **Find the Duplicate Number**.
+
+[Open AlgoBits](https://ryanata.github.io/algobits/)
 
 ## Development
 
@@ -16,43 +18,35 @@ npm run build
 npm run preview
 ```
 
-The library, search and experience filters use public, non-spoiler metadata. Hash routes work on static hosting without server rewrites. Review shuffles a full deck before starting another and avoids an immediate repeat at the boundary. No accounts, analytics, scores, or persistence of learning progress.
+Hash routes work on static hosting without rewrites. Review shuffles the collection once per deck and avoids an immediate repeat between decks. There are no accounts, analytics, scores, or saved learning progress.
 
-## Add a bit
+## Add a question
 
-1. Copy `templates/challenge.tsx` to `src/challenges/04-your-slug/index.tsx`.
-2. Give it a unique `id` and fill in the metadata and explanation.
-3. Implement the component. Keep state local and call `onComplete()` on a correct answer.
-4. Keep titles, prompts and descriptions free of pattern names and problem spoilers.
-5. Verify the interaction and the math, then commit and push.
+1. Copy `templates/challenge.tsx` into `src/challenges/04-your-slug/index.tsx`.
+2. Add the problem statement, essential requirements, example, numeric limits, and source link. Use your own accurate restatement of the original problem.
+3. Write a question that requires understanding the algorithm. A user should not be able to complete it simply by following instructions that the interface supplies.
+4. Export an independent React component. Call `onAnswer("correct" | "incorrect" | "revealed")` when the user submits or asks to see the answer.
+5. Verify that exactly one answer is correct and that the distractors fail, then commit and push.
 
-`src/challenges/index.ts` discovers all `src/challenges/*/index.tsx` default exports at build time with `import.meta.glob`. There is no manual registration list. The full TypeScript contract is in `src/challenges/types.ts`. The shell owns the reveal, original-problem links, navigation and review randomization; a module owns its interaction.
+`src/challenges/index.ts` discovers modules at build time. No manual registration is needed. The contract lives in `src/challenges/types.ts`: `id`, `problem`, `tags`, `explanation`, `code`, and `Component`. The shell shows the problem before the interaction and the explanation after answering. Algorithm tags remain metadata. `Question.tsx` provides optional multiple-choice UI; modules can use their own interactions.
 
-Content contract: `id`, `title`, `description`, `kind`, `minutes`, `date`, `accent`, `problem`, `tags`, `insight`, `explanation`, `code`, and `Component`. Public metadata appears before the reveal; `problem`, `tags`, `insight`, `explanation`, and `code` are rendered only afterward. Add an experience kind to the union and filter list if needed; interactions themselves are unrestricted React components.
+The three questions test a hash-map invariant, safe pointer movement, and Floyd’s cycle-entrance phase. Tests run the actual displayed code against independent oracles and verify that the initial page includes the statement and requirements without exposing the answer.
 
-## Offline and installation
+## Offline
 
-The production build precaches the app shell, **all challenge modules**, fonts and icons using a generated Workbox service worker. Load the production site once with a connection and wait for “Ready for offline moments” in the footer. Then reload or visit any challenge offline. Development mode does not register a service worker; use `npm run build && npm run preview` for offline testing.
+Production builds precache the shell, every module, fonts and icons. Load once online; “Available offline” confirms readiness. The browser’s install / Add to Home Screen action installs the PWA. External LeetCode and GitHub links need a connection. Browser cache eviction can remove offline copies.
 
-Install with your browser’s install / Add to Home Screen action. New releases wait until existing app tabs close, so an active review is not interrupted. LeetCode and GitHub links require a connection. Browser cache eviction can remove offline copies.
+New releases wait until you choose Reload or close existing app tabs, preserving an active review. Development mode does not register the service worker.
 
 ## GitHub Pages
 
-The `Deploy AlgoBits` workflow runs tests, checks TypeScript, builds the PWA, and publishes `dist/` on each push to `main`. In repository Settings → Pages, use **GitHub Actions** as the build source. The workflow sets `BASE_PATH` to the repository name. For an account-level `username.github.io` repository or custom-domain root, change `BASE_PATH` to `/`.
-
-For a local deployment-path check:
+Each push to `main` runs tests, type checking and the build, then deploys `dist/`. Repository Settings → Pages uses GitHub Actions. The workflow sets `BASE_PATH` to the repository name.
 
 ```sh
 BASE_PATH=/algobits/ npm run build
 BASE_PATH=/algobits/ npm run preview
 ```
 
-Live site: https://ryanata.github.io/algobits/
+## License
 
-## Verification
-
-`npm test` covers algorithm edge cases and thousands of exhaustive small-array cases against independent brute-force or counting oracles. It also checks the registry and review deck behavior. Browser QA covers the three interactive flows, hidden reveal content, filters, mobile layout, deep links, and production offline reloads.
-
-## Design and license
-
-Original interface and illustrations. DM Sans and DM Serif Display are bundled locally through Fontsource under the SIL Open Font License; license files ship in the font packages. Lucide icons use the ISC license. Application source is MIT licensed.
+Application source: MIT. DM Sans is bundled through Fontsource under the SIL Open Font License. Lucide icons use ISC.

@@ -16,9 +16,9 @@ export default defineConfig({
       manifest: {
         name: "AlgoBits",
         short_name: "AlgoBits",
-        description: "Small algorithm challenges. Lasting little insights.",
-        theme_color: "#f6f4ec",
-        background_color: "#f6f4ec",
+        description: "Algorithm review, one question at a time.",
+        theme_color: "#fafaf8",
+        background_color: "#fafaf8",
         display: "standalone",
         start_url: ".",
         scope: ".",
