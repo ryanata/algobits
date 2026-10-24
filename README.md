@@ -2,13 +2,13 @@
 
 A minimal React + TypeScript PWA for reviewing algorithm solutions.
 
-Read the problem, answer one question about its algorithm, then check the reasoning. The first edition covers **Two Sum**, **3Sum**, and **Find the Duplicate Number**.
+Read the problem, answer one question about its algorithm, then check the reasoning. All question code and reference solutions use Python. The first edition covers **Two Sum**, **3Sum**, and **Find the Duplicate Number**.
 
 [Open AlgoBits](https://ryanata.github.io/algobits/)
 
 ## Development
 
-Node 22.13+ and npm:
+Node 22.13+, npm, and Python 3 (for code-validation tests):
 
 ```sh
 npm ci

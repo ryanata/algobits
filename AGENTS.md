@@ -4,6 +4,8 @@ React + TypeScript PWA published to GitHub Pages from `main`.
 
 ## Product principles
 
+- Use Python for all user-facing code, answer options, and reference solutions. The app implementation remains React + TypeScript.
+
 - Keep the whole interface minimal. Avoid marketing copy, decorative illustrations, extra sections, and repeated instructions. The home page is a short list of problems.
 - Show the actual problem identity and an accurate, self-contained restatement **before** its question. Include an example and make essential constraints visible; numeric limits can be collapsed.
 - Questions must test understanding of the algorithm: an invariant, a correctness bug, a safe state transition, or a complexity requirement. Do not make guided games that teach the steps needed to answer while playing.

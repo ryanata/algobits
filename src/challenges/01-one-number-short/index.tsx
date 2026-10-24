@@ -10,13 +10,13 @@ export const cases = [
 export const question: QuizQuestion = {
   prompt:
     "This implementation claims to solve Two Sum. Which valid input makes it return an invalid answer?",
-  code: `const seen = new Map();
-for (let i = 0; i < nums.length; i++) {
-  seen.set(nums[i], i);
-  const j = seen.get(target - nums[i]);
-  if (j !== undefined) return [j, i];
-}
-return [];`,
+  code: `seen = {}
+for i, value in enumerate(nums):
+    seen[value] = i
+    j = seen.get(target - value)
+    if j is not None:
+        return [j, i]
+return []`,
   options: cases.map((c) => ({
     id: c.id,
     label: `nums = [${c.nums.join(", ")}], target = ${c.target}`,
@@ -43,14 +43,13 @@ const challenge: ChallengeModule = {
     "For [3, 2, 4] with target 6, the first iteration stores 3 → 0, then finds that same entry. It returns [0, 0], reusing one index. The valid pair is [1, 2].",
     "Look up the complement before inserting the current value. The map must contain only earlier indices. This invariant gives distinct indices in expected O(n) time with O(n) extra space.",
   ],
-  code: `function twoSum(nums, target) {
-  const seen = new Map();
-  for (let i = 0; i < nums.length; i++) {
-    const j = seen.get(target - nums[i]);
-    if (j !== undefined) return [j, i];
-    seen.set(nums[i], i);
-  }
-}`,
+  code: `def two_sum(nums, target):
+    seen = {}
+    for i, value in enumerate(nums):
+        j = seen.get(target - value)
+        if j is not None:
+            return [j, i]
+        seen[value] = i`,
   Component: Challenge,
 };
 export default challenge;

@@ -4,7 +4,7 @@ import type { ChallengeModule, ChallengeProps, QuizQuestion } from "../types";
 
 const question: QuizQuestion = {
   prompt: "Ask about an algorithm invariant, correctness, or complexity.",
-  code: "// Put the relevant code or algorithm state here.",
+  code: "# Put the relevant Python code or algorithm state here.",
   options: [
     { id: "a", label: "A plausible mistake" },
     { id: "b", label: "The correct answer" },
@@ -28,7 +28,7 @@ const challenge: ChallengeModule = {
   },
   tags: ["Underlying algorithm"],
   explanation: ["Explain the correct answer and why the distractors fail."],
-  code: "// Complete, correct reference solution",
+  code: "# Complete, correct Python reference solution",
   Component: Challenge,
 };
 export default challenge;

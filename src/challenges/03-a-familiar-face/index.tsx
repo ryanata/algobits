@@ -4,24 +4,24 @@ import type { ChallengeModule, ChallengeProps, QuizQuestion } from "../types";
 export const question: QuizQuestion = {
   prompt:
     "The two pointers have met. Which line completes this algorithm so that it returns the duplicate for every valid input?",
-  code: `let slow = 0, fast = 0;
-do {
-  slow = nums[slow];
-  fast = nums[nums[fast]];
-} while (slow !== fast);
+  code: `slow = fast = 0
+while True:
+    slow = nums[slow]
+    fast = nums[nums[fast]]
+    if slow == fast:
+        break
 
-// your answer
+# your answer
 
-while (slow !== fast) {
-  slow = nums[slow];
-  fast = nums[fast];
-}
-return slow;`,
+while slow != fast:
+    slow = nums[slow]
+    fast = nums[fast]
+return slow`,
   options: [
-    { id: "a", label: "return slow;" },
-    { id: "b", label: "slow = nums[0];" },
-    { id: "c", label: "fast = nums[fast];" },
-    { id: "d", label: "slow = 0;" },
+    { id: "a", label: "return slow" },
+    { id: "b", label: "slow = nums[0]" },
+    { id: "c", label: "fast = nums[fast]" },
+    { id: "d", label: "slow = 0" },
   ],
   correctId: "d",
 };
@@ -45,19 +45,18 @@ const challenge: ChallengeModule = {
     "Reset slow to index 0, then advance both pointers one step at a time. Their next meeting is the cycle entrance: the duplicate. The first meeting can be elsewhere; for [1, 3, 4, 2, 2], it is index 4, but the duplicate is 2.",
     "Treat nums[index] as a next pointer. Floyd’s meeting condition makes the distance from index 0 to the entrance equal, modulo the cycle length, to the distance from the meeting point to the entrance. Resetting to nums[0] instead changes that alignment for this initialization. The algorithm uses O(n) time and O(1) space without changing the array.",
   ],
-  code: `function findDuplicate(nums) {
-  let slow = 0, fast = 0;
-  do {
-    slow = nums[slow];
-    fast = nums[nums[fast]];
-  } while (slow !== fast);
-  slow = 0;
-  while (slow !== fast) {
-    slow = nums[slow];
-    fast = nums[fast];
-  }
-  return slow;
-}`,
+  code: `def find_duplicate(nums):
+    slow = fast = 0
+    while True:
+        slow = nums[slow]
+        fast = nums[nums[fast]]
+        if slow == fast:
+            break
+    slow = 0
+    while slow != fast:
+        slow = nums[slow]
+        fast = nums[fast]
+    return slow`,
   Component: Challenge,
 };
 export default challenge;

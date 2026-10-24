@@ -22,7 +22,7 @@ export default function Question({
       <h2 id="question-heading">Question</h2>
       <p>{prompt}</p>
       <pre className="question-code">
-        <code>{code}</code>
+        <code className="language-python">{code}</code>
       </pre>
       <fieldset disabled={submitted}>
         <legend className="sr-only">Choose an answer</legend>

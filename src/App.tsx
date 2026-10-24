@@ -202,7 +202,7 @@ export function ChallengePage({
           <details className="reference">
             <summary>Reference solution</summary>
             <pre>
-              <code>{c.code}</code>
+              <code className="language-python">{c.code}</code>
             </pre>
           </details>
           <div className="answer-actions">
